@@ -33,7 +33,7 @@ Ops/sec
 0.0.5 **********
 ```
 
-Imaginary Niceties of this npmbench's approach
+Imaginary Niceties of npmbench's approach
 ---
 - Output from each run of your js file will be put into a file named
   `moduleName@x.y.z.txt`.
