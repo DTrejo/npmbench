@@ -23,6 +23,14 @@ Example usage for testing the [`redis`][1] package, and running the file `multi_
 
 ```sh
 npmbench redis multi_bench.js
+
+# imaginary output:
+Ops/sec
+0.0.1 *****
+0.0.2 *******
+0.0.3 ********
+0.0.4 ****
+0.0.5 **********
 ```
 
 [1]: http://github.com/mranney/node_redis
