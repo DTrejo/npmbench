@@ -37,7 +37,7 @@ Imaginary Niceties of npmbench's approach
 ---
 - Output from each run of your js file will be put into a file named
   `moduleName@x.y.z.txt`.
-- These are then parsed into json files which are put at `moduleName@x.y.z.txt`
+- These are then parsed into json files which are put at `moduleName@x.y.z.json`
 - all the json files are then put together to form a fat json blob that is
   graphable by [insert popular client-side graphing lib] and can be output to
   the command line as an ascii graph.
