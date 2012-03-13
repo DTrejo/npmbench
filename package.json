@@ -7,6 +7,8 @@
     "url": ""
   },
   "main": "npmbench.js",
+  "preferGlobal": true,
+  "bin": { "npmbench": "./cli.js" },
   "scripts": {
     "test": "node test.js"
   },
