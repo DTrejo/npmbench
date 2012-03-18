@@ -9,8 +9,8 @@ if (!module || !file) {
     return;
 }
 
+
+console.log('== Not yet 100% written! Sorry! ==');
+
 // TODO: check for existence of file.
-
 bench(module, file);
-
-console.log('Not yet 100% written! Sorry!');

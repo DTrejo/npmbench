@@ -10,10 +10,10 @@ var colors = require('colors');
 var npm = require('npm');
 var metrics = require('metrics');
 
-console.log('Storing downloaded modules in', __dirname.green);
+console.log('Storing downloaded modules in', process.cwd().green);
 var npmConfig = {
   loglevel: 'silent'
-, cwd: __dirname + '/test_modules'
+, cwd: process.cwd() + '/test_modules'
 };
 
 // returns an array of releases for that module
@@ -69,7 +69,7 @@ function npmInstallReleases(module, cb) {
 // the stdout to a file called
 //  ./npmbench-moduleName@x.y.z.txt
 function benchRelease(module, version, file, cb) {
-    var command = 'node ' + path.join(__dirname, file);
+    var command = 'node ' + path.join(process.cwd(), file);
     var moduleAtVersion = module + '@' + version;
     var options = {
         cwd: moduleAtVersion
@@ -136,7 +136,7 @@ function parseOutputToJson(module, version, file, cb) {
         }
 
         words = l.split(' ').filter(isWhiteSpace);
-        ops = parseInt10(words.slice(-2, -1)[0])
+        ops = parseInt10(words.slice(-2, -1)[0]);
 
         var isNaN = !ops && ops !== 0;
         if (isNaN) {
@@ -153,17 +153,16 @@ function parseOutputToJson(module, version, file, cb) {
     , raw: raw
     };
 
-    var file = jsonFilename(module, version)
-    return fs.writeFile(file, JSON.stringify(data), 'utf8', function(err) {
+    var jsonfile = jsonFilename(module, version)
+    return fs.writeFile(jsonfile, JSON.stringify(data), 'utf8', function(err) {
         cb(err, data);
     });
-
-    function isWhiteSpace(s) {
-        return !!s.trim();
-    }
-    function parseInt10(s) {
-        return parseInt(s, 10);
-    }
+}
+function isWhiteSpace(s) {
+    return !!s.trim();
+}
+function parseInt10(s) {
+    return parseInt(s, 10);
 }
 
 // looks through each ./npmbench-moduleName@x.y.z.json file, constructs a json
@@ -178,7 +177,7 @@ function showGraph(graph) {
 
 }
 
-function bench(module, file, cb) {
+function bench(module, benchfile, cb) {
     npm.load(npmConfig, function (err) {
         if (err) throw err;
         // TODO do stuff
@@ -187,11 +186,18 @@ function bench(module, file, cb) {
         });
         npmInstallReleases(module, onInstalled);
     });
+    var versions;
     function onInstalled(err, results) {
         if (err) throw err;
-
-        var data = {}; // None yet. Sorry!
-        cb && cb(null, data);
+        versions = Object.keys(results);
+        benchReleases(module, versions, benchfile, onBenched);
+    }
+    function onBenched(err) {
+        if (err) throw err;
+        parseAllOutputToJson(module, versions, onParsed);
+    }
+    function onParsed(err) {
+        // graph it!
     }
     // how I want it to work
     // - my code downloads each release
@@ -247,7 +253,7 @@ function test() {
                     a(result);
                 });
                 parseAllOutputToJson(MODULE, versions, function(err) {
-
+                    // TODO
                 });
             });
         });
