@@ -4,7 +4,8 @@
   "description": "benchmark each release of a node module published on npm against each other release using a small command line tool",
   "version": "0.0.1",
   "repository": {
-    "url": ""
+    "type": "git",
+    "url": "http://github.com/dtrejo/npmbench.git"
   },
   "main": "npmbench.js",
   "preferGlobal": true,
