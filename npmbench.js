@@ -177,6 +177,22 @@ function showGraph(graph) {
 
 }
 
+//
+// toStars(10, 1)
+//      *
+// toStars(100, 50)
+//      *****
+function toStars(biggest, num) {
+    // make the numbers between 0 and 1.
+    var ratio = Math.floor(num / biggest);
+    var numStars = ratio * 10;
+    var numSpaces = 10 - numStars;
+    var stars = '';
+    while (numStars--) stars += '*';
+    while (numSpaces--) stars += '_';
+    return stars;
+}
+
 function bench(module, benchfile, cb) {
     npm.load(npmConfig, function (err) {
         if (err) throw err;
@@ -196,8 +212,14 @@ function bench(module, benchfile, cb) {
         if (err) throw err;
         parseAllOutputToJson(module, versions, onParsed);
     }
-    function onParsed(err) {
-        // graph it!
+    function onParsed(err, results) {
+        var biggest = Math.max.apply(Math.max, _.pluck(results, 'mean'));
+
+        _.each(results, function(data, version) {
+            console.log('v'+version, '→', toStars(data.mean, biggest)
+                , '(', data.mean, ')');
+        });
+        // graph it on the command line!
     }
     // how I want it to work
     // - my code downloads each release
@@ -252,8 +274,9 @@ function test() {
                 _.each(results, function(result, version) {
                     a(result);
                 });
-                parseAllOutputToJson(MODULE, versions, function(err) {
+                parseAllOutputToJson(MODULE, versions, function(err, data) {
                     // TODO
+                    console.log(_.keys(data));
                 });
             });
         });
