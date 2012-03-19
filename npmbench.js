@@ -177,6 +177,15 @@ function showGraph(graph) {
 
 }
 
+// just graph it quick n dirty on the command line with asterisks.
+function cliGraph(results) {
+    var biggest = Math.max.apply(Math.max, _.pluck(results, 'mean'));
+
+    _.each(results, function(data, version) {
+        console.log('v'+version, '→', toStars(data.mean, biggest)
+            , '(', data.mean, ')');
+    });
+}
 //
 // toStars(10, 1)
 //      *
@@ -213,13 +222,7 @@ function bench(module, benchfile, cb) {
         parseAllOutputToJson(module, versions, onParsed);
     }
     function onParsed(err, results) {
-        var biggest = Math.max.apply(Math.max, _.pluck(results, 'mean'));
-
-        _.each(results, function(data, version) {
-            console.log('v'+version, '→', toStars(data.mean, biggest)
-                , '(', data.mean, ')');
-        });
-        // graph it on the command line!
+        cliGraph(results);
     }
     // how I want it to work
     // - my code downloads each release
