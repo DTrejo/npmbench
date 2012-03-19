@@ -2,6 +2,7 @@
   "author": "David Trejo <david.daniel.trejo@gmail.com> (http://dtrejo.com/)",
   "name": "npmbench",
   "description": "benchmark each release of a node module published on npm against each other release using a small command line tool",
+  "tags": ["npm", "bench", "benchmark", "utility", "command line", "custom"],
   "version": "0.0.2",
   "repository": {
     "type": "git",
