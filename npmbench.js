@@ -13,7 +13,7 @@ var metrics = require('metrics');
 console.log('Storing downloaded modules in', process.cwd().green);
 var npmConfig = {
   loglevel: 'silent'
-, cwd: process.cwd() + '/test_modules'
+, cwd: process.cwd() + '/test_modules' // TODO remove this does nothing :|
 };
 
 // returns an array of releases for that module
@@ -68,20 +68,30 @@ function npmInstallReleases(module, cb) {
 // benches js file at a single release, calls back with the stdout, also writes
 // the stdout to a file called
 //  ./npmbench-moduleName@x.y.z.txt
+// it will not re-run a bench if the file is already there — this makes it easy
+// to rerun specific benches without needing to redo all of them :)
 function benchRelease(module, version, file, cb) {
-    var command = 'node ' + path.join(process.cwd(), file);
+    // var command = 'node ' + path.join(process.cwd(), file);
+    var command = 'node ' + file;
     var moduleAtVersion = module + '@' + version;
+
+    // don't re-run the bench if there is already an output file there
+    var txtFile = txtFilename(module, version);
+    if (path.existsSync(txtFile)) {
+        console.log('Skipping'.yellow, ('`'+command+'`').green,
+            'on', moduleAtVersion, ' (.txt output file already exists!)');
+        return cb(null, fs.readFileSync(txtFile, 'utf8'), '');
+    }
+
     var options = {
         cwd: moduleAtVersion
     };
-    console.log('Running `'+command+'`, on', moduleAtVersion);
-    exec(command, options, function(err, stdout, stderr) {
-
+    console.log('Running', ('`'+command+'`').green, 'on', moduleAtVersion);
+    return exec(command, options, function(err, stdout, stderr) {
         // write bench output to file
-        var file = txtFilename(module, version);
-        fs.writeFile(file, stdout, 'utf8', function(writeErr) {
+        fs.writeFile(txtFile, stdout, 'utf8', function(writeErr) {
             if (writeErr) console.log(new Error(
-                'Error writing bench output to '+file
+                'Error writing bench output to '+txtFile
                 + '. ' + writeErr.message
             ).stack);
 

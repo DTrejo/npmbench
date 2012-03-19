@@ -42,7 +42,8 @@ Gotchas
 Niceties of npmbench's approach
 ---
 - Output from each run of your js file will be put into a file named
-  `npmbench-moduleName@x.y.z.txt`.
+  `npmbench-moduleName@x.y.z.txt`. It skips running a given bench if there is
+  already a .txt file there for it.
 - These are then parsed into json files which are put at `npmbench-moduleName@x.y.z.json`
 - makes it easy to run your own analysis of the numbers after all the benches
   have been run, or just grep through it :)
@@ -56,7 +57,6 @@ Why is this nice? Makes it easy to write your own parser for the output.
 
 TODO:
 
-- skip running a given bench if there is already a .txt file there for it
 - graph the graph with something fancier than asterisks on the command line.
 - split out the parsing stage so people can supply their own output parser (too
   much work?)
