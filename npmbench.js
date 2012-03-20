@@ -170,7 +170,7 @@ function parseOutputToJson(module, version, file, cb) {
         totalOps.update(ops);
     });
 
-    console.log('Mean ops/sec:', totalOps.mean());
+    // console.log('Mean ops/sec:', totalOps.mean());
     var data = {
       mean: totalOps.mean()
     , stdDev: totalOps.stdDev()

@@ -38,6 +38,15 @@ Gotchas
 - releases with incompatible APIs will likely throw errors when the js file is
   run, and will be omitted aka set to 0. If the error is more serious, things
   may just crash and I'm sorry.
+  
+Your bench should output something like this (even just one line that says `888 ops/sec` will work just fine):
+
+```
+[... whatever test output you like ...] 999.9 ops/sec
+[... whatever test output you like ...] 999.9 ops/sec
+[... whatever test output you like ...] 999.9 ops/sec
+```
+**Summary:** there must be at least one line, and the 2nd to last whitespace separated word must be a number representing the ops/sec.
 
 Niceties of npmbench's approach
 ---
