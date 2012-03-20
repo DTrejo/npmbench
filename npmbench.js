@@ -32,18 +32,28 @@ function releases(module, cb) {
 // install a single module. gets put in it's own module@version folder.
 function install(module, version, cb) {
     var moduleAtVersion = module + '@' + version;
+    
+    // don't re-run the bench if there is already an output file there
+    var folder = moduleFoldername(module, version);
+    if (path.existsSync(folder)) {
+        console.log(folder, 'already installed,', 'skipping'.yellow
+            , '(folder already exists!)');
+        var win = true;
+        return cb(null, true);
+    }
+    
     // console.log('installing', moduleAtVersion);
-    npm.commands.install([ moduleAtVersion ], function(err, data) {
+    return npm.commands.install([ moduleAtVersion ], function(err, data) {
         if (err) throw new Error(err.message);
         var source = path.join('./node_modules', module);
         var dest = path.join('./', moduleAtVersion);
-        fs.move(source, dest, function(err) {
+        return fs.move(source, dest, function(err) {
             if (err) {
                 if (/(exists.)$/.exec(err.message)) ; // exists, ignore it!
                 else throw new Error(err.message);
             }
             var win = true;
-            cb(null, win);
+            return cb(null, win);
         });
     });
 }
@@ -109,6 +119,10 @@ function benchReleases(module, versions, file, cb) {
             async.apply(benchRelease, module, version, file);
     });
     async.series(tasks, cb);
+}
+
+function moduleFoldername(module, version) {
+    return module + '@' + version;
 }
 
 function txtFilename(module, version) {
