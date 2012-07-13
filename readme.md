@@ -48,6 +48,17 @@ Your bench should output something like this (even just one line that says `888 
 ```
 **Summary:** there must be at least one line, and the 2nd to last whitespace separated word must be a number representing the ops/sec.
 
+in order to load the correct version of the module,
+be sure to use the following pattern when requiring your module:
+var gss;
+if (process.env.npmbench) {
+    gss = require('./');
+    console.log('Currently running', require.resolve('./'));
+} else {
+    gss = require('gss');
+}
+
+
 Niceties of npmbench's approach
 ---
 - Output from each run of your js file will be put into a file named
